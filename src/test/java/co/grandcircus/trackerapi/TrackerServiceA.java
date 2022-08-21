@@ -1,64 +1,108 @@
 package co.grandcircus.trackerapi;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 import co.grandcircus.trackerapi.model.CountPair;
 import co.grandcircus.trackerapi.service.TrackerService;
 
+@Service
 public class TrackerServiceA implements TrackerService {
+
+	private HashMap<String, Integer> tokenMap;
+	private LinkedList<String> lastTokenTracker;
+
+	public TrackerServiceA() {
+		tokenMap = new HashMap<>();
+		lastTokenTracker = new LinkedList<>();
+	}
 
 	@Override
 	public void add(String token) {
-		// TODO Auto-generated method stub
+		if (!getTokenExists(token)) {
+			tokenMap.put(token, 1);
+		} else {
+			tokenMap.put(token, tokenMap.get(token) + 1);
 
+		}
+		lastTokenTracker.add(token);
+		if (lastTokenTracker.size() > 5) {
+			lastTokenTracker.remove();
+		}
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
-
+		tokenMap.clear();
+		lastTokenTracker.clear();
 	}
 
 	@Override
 	public int getTotalCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		int totalValue = 0;
+		for (int value : tokenMap.values()) {
+			totalValue += value;
+
+		}
+		return totalValue;
 	}
 
 	@Override
 	public boolean getTokenExists(String token) {
-		// TODO Auto-generated method stub
+		if (tokenMap.containsKey(token)) {
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public int getTokenCount(String token) {
-		// TODO Auto-generated method stub
-		return 0;
+		if (!tokenMap.containsKey(token)) {
+			return 0;
+		}
+		return tokenMap.get(token);
 	}
 
 	@Override
 	public String getLatest() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return lastTokenTracker.getLast();
 	}
 
 	@Override
 	public CountPair getTop() {
-		// TODO Auto-generated method stub
-		return null;
+		if (tokenMap.isEmpty()) {
+			return new CountPair("", 0);
+		}
+		String maxResult = tokenMap.keySet().stream().max((keyA, keyB) -> tokenMap.get(keyA) - tokenMap.get(keyB))
+				.get();
+
+		return new CountPair(maxResult, tokenMap.get(maxResult));
 	}
 
 	@Override
 	public List<String> getLatest5() {
-		// TODO Auto-generated method stub
-		return null;
+		List<String>copiedList = new ArrayList<>();
+		copiedList.addAll(lastTokenTracker);
+		Collections.reverse(copiedList);
+		
+		return copiedList;
 	}
 
 	@Override
 	public List<CountPair> getTop5() {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> topFiveList = tokenMap.keySet().stream()
+				.sorted((keyA, keyB) -> tokenMap.get(keyB) - tokenMap.get(keyA)).limit(5).toList();
+		List<CountPair> countPairs= new ArrayList<>();
+		for (String key : topFiveList) {
+			countPairs.add(new CountPair(key,tokenMap.get(key)));
+		}
+		return countPairs;
 	}
 
 }
