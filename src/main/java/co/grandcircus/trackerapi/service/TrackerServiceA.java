@@ -1,9 +1,8 @@
-package co.grandcircus.trackerapi;
+package co.grandcircus.trackerapi.service;
 
 import java.util.List;
 
 import co.grandcircus.trackerapi.model.CountPair;
-import co.grandcircus.trackerapi.service.TrackerService;
 
 public class TrackerServiceA implements TrackerService {
 
