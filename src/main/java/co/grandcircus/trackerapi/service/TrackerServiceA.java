@@ -68,8 +68,7 @@ public class TrackerServiceA implements TrackerService {
 	}
 
 	@Override
-	//
-	//TODO:Only returning the first key given, NEEDS FIXING (passes junit test)
+	
 	public String getLatest() {
 		if(lastTokenTracker.isEmpty()) {
 			return "";
@@ -90,7 +89,6 @@ public class TrackerServiceA implements TrackerService {
 	}
 
 	@Override
-	//TODO: Returning a long numbered  list, but no values. NEED FIXING ( works with junit test)
 	public List<String> getLatest5() {
 		List<String>copiedList = new ArrayList<>();
 		copiedList.addAll(lastTokenTracker);
