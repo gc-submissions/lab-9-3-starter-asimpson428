@@ -22,7 +22,7 @@ public class TrackerServiceA implements TrackerService {
 	}
 
 	@Override
-	public void add(String token) {
+	public synchronized void add(String token) {
 		if (!getTokenExists(token)) {
 			tokenMap.put(token, 1);
 		} else {
@@ -31,7 +31,7 @@ public class TrackerServiceA implements TrackerService {
 		}
 		lastTokenTracker.add(token);
 		if (lastTokenTracker.size() > 5) {
-			lastTokenTracker.remove();
+				lastTokenTracker.remove();
 		}
 	}
 

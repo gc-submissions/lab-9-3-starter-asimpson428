@@ -16,7 +16,7 @@ public class TrackerServiceB implements TrackerService {
 	private ArrayList<String> tokenList = new ArrayList<>();
 
 	@Override
-	public void add(String token) {
+	public synchronized void add(String token) {
 
 		tokenList.add(token);
 
@@ -44,9 +44,10 @@ public class TrackerServiceB implements TrackerService {
 	}
 
 	@Override
+	// TODO:Finish this
 	public int getTokenCount(String token) {
-		//tokenList.stream().filter(null)
-		return 0;
+		int tokenCount = (int) tokenList.stream().filter(itemInList -> itemInList.equals(token)).count();
+		return tokenCount;
 	}
 
 	@Override
@@ -57,14 +58,23 @@ public class TrackerServiceB implements TrackerService {
 
 	@Override
 	public CountPair getTop() {
-		// TODO Auto-generated method stub
-		return null;
+		if (tokenList.isEmpty()) {
+			return new CountPair("", 0);
+		}
+		return getTop5().get(0);
+
 	}
 
 	@Override
 	public List<String> getLatest5() {
-		// TODO Auto-generated method stub
-		return null;
+		if (tokenList.isEmpty()) {
+			return new ArrayList<String>();
+		}
+
+		List<String> subTokenList = new ArrayList<>(tokenList
+				.subList(tokenList.size() - Math.min(5, tokenList.size()), tokenList.size()));
+		Collections.reverse(subTokenList);
+		return subTokenList;
 	}
 
 	@Override
@@ -79,12 +89,13 @@ public class TrackerServiceB implements TrackerService {
 
 		}
 
-		List<String> tokenList = tokenMap.keySet().stream().toList();
+		List<String> tokenList = new ArrayList<>(tokenMap.keySet());
 		tokenList.sort((key1, key2) -> tokenMap.get(key1) - tokenMap.get(key2));
+
 		Collections.reverse(tokenList);
 		List<CountPair> result = new ArrayList<>();
-		for (String token : tokenList.subList(0, 5)) {
-		result.add(	new CountPair(token, tokenMap.get(token)));
+		for (String token : tokenList.subList(0, Math.min(5, tokenList.size()))) {
+			result.add(new CountPair(token, tokenMap.get(token)));
 		}
 		return result;
 	}
