@@ -8,10 +8,12 @@ import org.junit.jupiter.api.Test;
 import co.grandcircus.trackerapi.model.CountPair;
 import co.grandcircus.trackerapi.service.TrackerService;
 import co.grandcircus.trackerapi.service.TrackerServiceA;
+import co.grandcircus.trackerapi.service.TrackerServiceB;
+
 
 public class TrackerServiceTests {
 	
-	private TrackerService service = new TrackerServiceA();
+	private TrackerService service = new TrackerServiceB();
 	
 	@BeforeEach
 	void setup() {

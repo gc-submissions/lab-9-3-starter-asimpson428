@@ -18,9 +18,7 @@ public class TrackerApiController {
 	
 	// When you have multiple services that implement TrackerService,
 	// the @Qualifier annotation picks which to inject here.
-	
-	
-	@Qualifier("trackerServiceA")
+	@Qualifier("trackerServiceB")
 	@Autowired
 	TrackerService service;
 
