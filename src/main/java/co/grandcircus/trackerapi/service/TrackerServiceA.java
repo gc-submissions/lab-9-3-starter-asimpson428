@@ -1,4 +1,4 @@
-package co.grandcircus.trackerapi;
+package co.grandcircus.trackerapi.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import co.grandcircus.trackerapi.model.CountPair;
-import co.grandcircus.trackerapi.service.TrackerService;
 
 @Service
 public class TrackerServiceA implements TrackerService {
@@ -69,7 +68,12 @@ public class TrackerServiceA implements TrackerService {
 	}
 
 	@Override
+	//
+	//TODO:Only returning the first key given, NEEDS FIXING (passes junit test)
 	public String getLatest() {
+		if(lastTokenTracker.isEmpty()) {
+			return "";
+		}
 
 		return lastTokenTracker.getLast();
 	}
@@ -86,6 +90,7 @@ public class TrackerServiceA implements TrackerService {
 	}
 
 	@Override
+	//TODO: Returning a long numbered  list, but no values. NEED FIXING ( works with junit test)
 	public List<String> getLatest5() {
 		List<String>copiedList = new ArrayList<>();
 		copiedList.addAll(lastTokenTracker);
@@ -99,6 +104,7 @@ public class TrackerServiceA implements TrackerService {
 		List<String> topFiveList = tokenMap.keySet().stream()
 				.sorted((keyA, keyB) -> tokenMap.get(keyB) - tokenMap.get(keyA)).limit(5).toList();
 		List<CountPair> countPairs= new ArrayList<>();
+		
 		for (String key : topFiveList) {
 			countPairs.add(new CountPair(key,tokenMap.get(key)));
 		}
